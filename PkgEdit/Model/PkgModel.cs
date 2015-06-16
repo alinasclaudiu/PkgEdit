@@ -578,11 +578,11 @@ namespace PkgEdit.Model
 
     public class PkgInstallerSh : PkgChunk
     {
-        private UInt16 order;
+        private ushort order;
         private string name;
         private byte[] data;
 
-        public UInt16 Order
+        public ushort Order
         {
             get { return order; }
             set { SetField(ref order, value); }
