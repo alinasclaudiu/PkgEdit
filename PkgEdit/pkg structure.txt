@@ -1,0 +1,101 @@
+KORG pkg format
+
+number in [] is number of bytes
+all of the chunks is 4 byte aligned - chunk start address is must be (addr % 4 == 0)
+end of string is marked by 0
+
+[16] - MD5 hash of pkg data, from offset 16 to the end of file
+
+	[header]
+		[4] - id (1)
+		[4] - size
+		[12] - some unknown bytes, seem to be always 0x030604030200000002000100
+		[string] - system type 1
+		[string] - system type 2
+		[string] - build system
+		[string] - date
+		[string] - time
+		[string] - package type 1
+		[string] - package type 2
+
+	[kernel1]
+		[4] - id (2)
+		[4] - size
+		[16] - MD5 hash of data
+		[size - 16] - data
+
+	[ramdisk]
+		[4] - id (3)
+		[4] - size
+		[16] - MD5 hash of data
+		[size - 16] - data
+
+	[installer]
+		[4] - id (4)
+		[4] - size
+		[16] - MD5 hash of data
+		[size - 16] - data
+
+	[installer xml]
+		[4] - id (5)
+		[4] - size
+		[16] - MD5 hash of data
+		[size - 16] - data
+
+	[installer sh]
+		[4] - id (15)
+		[4] - size
+		[16] - MD5 hash of data
+		[2] - order (probably)
+		[string] - name
+		[size - 18 - (name.length + 1)] - data
+
+	[kernel2]
+		[4] - id (14)
+		[4] - size
+		[16] - MD5 hash of data
+		[size - 16] - data
+
+	[directory]
+		[4] - id (16)
+		[4] - size
+		[4] - some unknown bytes - seems to be always 0x00000000
+		[2] - permissions (probably)
+		[2] - some unknown bytes - seems to be usually 0xFFFF
+		[string] - name
+
+	[file]
+		[4] - id (17)
+		[4] - size
+		[16] - MD5 hash of uncompressed data
+		[4] - some unknown bytes - seems to be always 0x00000000
+		[2] - permissions (probably)
+		[2] - some unknown bytes - seems to be usually 0xFFFF
+		[4] - data size
+		[1] - is data compressed, it uses the zlib compression method (best compression level)
+		[string] - name
+		[string] - date
+		[string] - time
+
+		if(is data compressed == 1)
+			if(there is more data)
+				[4] - 0x00000100
+				[4] - compressed block size + 4
+				[4] - uncompressed block size (swapped byte endian) - maximum size is seems to be 0x00100000 (1MB)
+				[compressed block size - 4] - data
+				if(compressed block size % 4 != 0)
+					align the compressed block size to 4
+			if(there is no more data)
+				[4] - 0x00000101
+				[4] - 0x00000000
+		else if(is data compressed == 0)
+			[data size] - data
+
+	[file system]
+		[4] - id (19)
+		[4] - size
+		[16] - MD5 hash of data
+		[4] - size & 0xFFFFFF00
+		[2] - some unknown bytes - seems to be always 0x0200
+		[string] - name
+		[size - 22 + (name + 1)] - data
