@@ -8,7 +8,7 @@ namespace PkgEdit.ViewModel
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        protected ViewModelBase()
+        public ViewModelBase()
         {
 
         }

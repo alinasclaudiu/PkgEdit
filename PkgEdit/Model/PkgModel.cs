@@ -266,6 +266,7 @@ namespace PkgEdit.Model
 
     public abstract class PkgChunk : PkgBase
     {
+        public abstract string AsString { get; }
         public abstract string GetPreferredFileName();
         public abstract void LoadChunkFromStream(Stream s, int size);
         public abstract void SaveChunkToStream(Stream s);
@@ -321,13 +322,10 @@ namespace PkgEdit.Model
         public string PackageType2
         {
             get { return packageType2; }
-            set { SetField(ref packageType2, value); }
+            set { SetField(ref packageType2, value); OnPropertyChanged("AsString"); }
         }
 
-        public override string ToString()
-        {
-            return "Header - " + PackageType2;
-        }
+        public override string AsString { get { return "Header - " + PackageType2; } }
 
         public override string GetPreferredFileName()
         {
@@ -390,10 +388,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "Kernel1";
-        }
+        public override string AsString { get { return "Kernel 1"; } }
 
         public override string GetPreferredFileName()
         {
@@ -439,10 +434,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "Ramdisk";
-        }
+        public override string AsString { get { return "Ramdisk"; } }
 
         public override string GetPreferredFileName()
         {
@@ -488,10 +480,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "Installer";
-        }
+        public override string AsString { get { return "Installer"; } }
 
         public override string GetPreferredFileName()
         {
@@ -537,10 +526,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "InstallerXml";
-        }
+        public override string AsString { get { return "Installer Xml"; } }
 
         public override string GetPreferredFileName()
         {
@@ -590,7 +576,7 @@ namespace PkgEdit.Model
         public string Name
         {
             get { return name; }
-            set { SetField(ref name, value); }
+            set { SetField(ref name, value); OnPropertyChanged("AsString"); }
         }
         public byte[] Data
         {
@@ -598,10 +584,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "InstallerSh - " + Name;
-        }
+        public override string AsString { get { return "Installer Sh - " + Name; } }
 
         public override string GetPreferredFileName()
         {
@@ -654,10 +637,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "Kernel2";
-        }
+        public override string AsString { get { return "Kernel 2"; } }
 
         public override string GetPreferredFileName()
         {
@@ -701,7 +681,7 @@ namespace PkgEdit.Model
         public ushort Permissions
         {
             get { return permissions; }
-            set { SetField(ref permissions, value); }
+            set { SetField(ref permissions, value); OnPropertyChanged("AsString"); }
         }
         public string Name
         {
@@ -709,10 +689,7 @@ namespace PkgEdit.Model
             set { SetField(ref name, value); }
         }
 
-        public override string ToString()
-        {
-            return "Directory - " + Name;
-        }
+        public override string AsString { get { return "Directory - " + Name; } }
 
         public override string GetPreferredFileName()
         {
@@ -772,7 +749,7 @@ namespace PkgEdit.Model
         public string Name
         {
             get { return name; }
-            set { SetField(ref name, value); }
+            set { SetField(ref name, value); OnPropertyChanged("AsString"); }
         }
         public string Date
         {
@@ -789,6 +766,7 @@ namespace PkgEdit.Model
             get { return data; }
             set { SetField(ref data, value); }
         }
+        public override string AsString { get { return "File - " + Name; } }
 
         public override string ToString()
         {
@@ -910,6 +888,11 @@ namespace PkgEdit.Model
             s.Seek(tempOffset, SeekOrigin.Begin);
         }
 
+        public void ImportDataFromStream(Stream s)
+        {
+            Data = ReadArray(s, (int)s.Length);
+        }
+
         public override void ExportDataToStream(Stream s)
         {
             WriteArray(s, Data);
@@ -924,7 +907,7 @@ namespace PkgEdit.Model
         public string Name
         {
             get { return name; }
-            set { SetField(ref name, value); }
+            set { SetField(ref name, value); OnPropertyChanged("AsString"); }
         }
         public byte[] Data
         {
@@ -932,10 +915,7 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
-        public override string ToString()
-        {
-            return "FileSystem - " + Name;
-        }
+        public override string AsString { get { return "FileSystem - " + Name; } }
 
         public override string GetPreferredFileName()
         {

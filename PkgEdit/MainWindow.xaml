@@ -1,45 +1,46 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:PkgEdit.ViewModel"
-        xmlns:ObjectModel="clr-namespace:System.Collections.ObjectModel;assembly=System" x:Class="PkgEdit.MainWindow"
+        x:Class="PkgEdit.MainWindow"
         Title="Korg OS Package Editor" Height="400" Width="600">
-
-    <Window.DataContext>
-        <vm:PkgViewModel/>
-    </Window.DataContext>
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenFile}" Key="O" Modifiers="Control"/>
         <KeyBinding Command="{Binding SaveFile}" Key="S" Modifiers="Control"/>
+        <KeyBinding Command="{Binding EditItem}" Key="E"/>
+        <KeyBinding Command="{Binding ExportItem}" Key="E" Modifiers="Control"/>
         <KeyBinding Command="{Binding RemoveItem}" Key="Delete"/>
         <KeyBinding Command="{Binding MoveUp}" Key="F5"/>
         <KeyBinding Command="{Binding MoveDown}" Key="F6"/>
     </Window.InputBindings>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenFile}" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Save" Command="{Binding SaveFile}" InputGestureText="Ctrl+S"/>
                 <Separator/>
                 <MenuItem Header="Exit" Command="{Binding ExitApp}"/>
             </MenuItem>
-            <MenuItem Header="Help"/>
+            <MenuItem Header="Help">
+                <MenuItem Header="Pkg Structure" Command="{Binding OpenPkgStructure}"/>
+            </MenuItem>
         </Menu>
 
-        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Pkg.Chunks}" SelectedIndex="{Binding ListIndex}">
+        <ListBox Grid.Row="1" ItemsSource="{Binding Pkg.Chunks}" SelectedIndex="{Binding ListIndex}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding AsString}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Export" Command="{Binding ExportItem}"/>
+                    <MenuItem Header="Edit" Command="{Binding EditItem}" InputGestureText="E"/>
+                    <MenuItem Header="Export" Command="{Binding ExportItem}" InputGestureText="Ctrl+E"/>
                     <Separator/>
                     <MenuItem Header="Insert">
                         <MenuItem Header="Header" Command="{Binding InsertElement}" CommandParameter="Header"/>

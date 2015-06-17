@@ -1,11 +1,14 @@
 ﻿using PkgEdit.Model;
+using PkgEdit.Views;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PkgEdit.ViewModel
 {
-    class PkgViewModel : ViewModelBase
+    public class PkgViewModel : ViewModelBase
     {
         private Pkg pkg;
         public Pkg Pkg
@@ -24,6 +27,8 @@ namespace PkgEdit.ViewModel
         public ICommand OpenFile { get { return new RelayCommand(OpenPkgExecute); } }
         public ICommand SaveFile { get { return new RelayCommand(SavePkgExecute); } }
         public ICommand ExitApp { get { return new RelayCommand(ExitAppExecute); } }
+        public ICommand OpenPkgStructure { get { return new RelayCommand(OpenPkgStructureExecute); } }
+        public ICommand EditItem { get { return new RelayCommand(EditItemExecute, EditItemCanExecute); } }
         public ICommand ExportItem { get { return new RelayCommand(ExportItemExecute, ExportItemCanExecute); } }
         public ICommand InsertElement { get { return new RelayCommand<string>(InsertItemExecute); } }
         public ICommand RemoveItem { get { return new RelayCommand(RemoveItemExecute, RemoveItemCanExecute); } }
@@ -68,6 +73,31 @@ namespace PkgEdit.ViewModel
         private void ExitAppExecute()
         {
             App.Current.Shutdown();
+        }
+
+        private void OpenPkgStructureExecute()
+        {
+            Process.Start("PkgStructure.txt");
+        }
+
+        private void EditItemExecute()
+        {
+            PkgChunk chunk = Pkg.Chunks[ListIndex];
+
+            if (chunk is PkgFile)
+            {
+                FileEditView v = new FileEditView();
+                v.DataContext = new FileEditViewModel((PkgFile)chunk);
+                v.Show();
+            }
+        }
+
+        private bool EditItemCanExecute()
+        {
+            if ((ListIndex >= 0) && (ListIndex < Pkg.Chunks.Count) && (Pkg.Chunks.Count > 0) && (Pkg.Chunks[ListIndex] is PkgFile))
+                return true;
+            else
+                return false;
         }
 
         private void ExportItemExecute()
