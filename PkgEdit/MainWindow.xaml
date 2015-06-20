@@ -6,6 +6,7 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenFile}" Key="O" Modifiers="Control"/>
         <KeyBinding Command="{Binding SaveFile}" Key="S" Modifiers="Control"/>
+        <KeyBinding Command="{Binding ExitApp}" Key="Q" Modifiers="Control"/>
         <KeyBinding Command="{Binding EditItem}" Key="E"/>
         <KeyBinding Command="{Binding ExportItem}" Key="E" Modifiers="Control"/>
         <KeyBinding Command="{Binding RemoveItem}" Key="Delete"/>
@@ -24,7 +25,7 @@
                 <MenuItem Header="Open" Command="{Binding OpenFile}" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Save" Command="{Binding SaveFile}" InputGestureText="Ctrl+S"/>
                 <Separator/>
-                <MenuItem Header="Exit" Command="{Binding ExitApp}"/>
+                <MenuItem Header="Exit" Command="{Binding ExitApp}" InputGestureText="Ctrl+Q"/>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="Pkg Structure" Command="{Binding OpenPkgStructure}"/>

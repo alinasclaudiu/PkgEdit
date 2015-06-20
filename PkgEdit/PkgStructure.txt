@@ -61,7 +61,7 @@ end of string is marked by 0
 		[4] - size
 		[4] - some unknown bytes - seems to be always 0x00000000
 		[2] - permissions (probably)
-		[2] - some unknown bytes - seems to be usually 0xFFFF
+		[2] - some unknown bytes - seems to be always 0xFFFF
 		[string] - name
 
 	[file]
@@ -78,7 +78,8 @@ end of string is marked by 0
 		[string] - time
 
 		if(is data compressed == 1)
-			if(there is more data)
+			while(there is more data)
+				each file if compressed is divided into 1MB (or smaller) blocks and then compressed using zlib library (best compression level)
 				[4] - 0x00000100
 				[4] - compressed block size + 4
 				[4] - uncompressed block size (swapped byte endian) - maximum size is seems to be 0x00100000 (1MB)

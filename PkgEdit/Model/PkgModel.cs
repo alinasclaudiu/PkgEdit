@@ -584,6 +584,11 @@ namespace PkgEdit.Model
             set { SetField(ref data, value); }
         }
 
+        public PkgInstallerSh()
+        {
+            order = 0xFFFF;
+        }
+
         public override string AsString { get { return "Installer Sh - " + Name; } }
 
         public override string GetPreferredFileName()
@@ -730,6 +735,7 @@ namespace PkgEdit.Model
     public class PkgFile : PkgChunk
     {
         private ushort permissions;
+        private ushort unknown;
         private bool isCompressed;
         private string name;
         private string date;
@@ -740,6 +746,11 @@ namespace PkgEdit.Model
         {
             get { return permissions; }
             set { SetField(ref permissions, value); }
+        }
+        public ushort Unknown
+        {
+            get { return unknown; }
+            set { SetField(ref unknown, value); }
         }
         public bool IsCompressed
         {
@@ -768,6 +779,11 @@ namespace PkgEdit.Model
         }
         public override string AsString { get { return "File - " + Name; } }
 
+        public PkgFile()
+        {
+            Unknown = 0xFFFF;
+        }
+
         public override string ToString()
         {
             return "File - " + Name;
@@ -785,7 +801,7 @@ namespace PkgEdit.Model
         {
             s.Seek(20, SeekOrigin.Current);
             Permissions = Read2(s);
-            s.Seek(2, SeekOrigin.Current);
+            Unknown = Read2(s); //s.Seek(2, SeekOrigin.Current);
             uint dataSize = Read4(s);
             if (Read1(s) == 0)
                 IsCompressed = false;
@@ -830,7 +846,7 @@ namespace PkgEdit.Model
             WriteArray(s, hash);
             WriteArray(s, new byte[] { 0x00, 0x00, 0x00, 0x00 });
             Write2(s, Permissions);
-            WriteArray(s, new byte[] { 0xFF, 0xFF });
+            Write2(s, Unknown); //WriteArray(s, new byte[] { 0xFF, 0xFF });
             Write4(s, (uint)Data.Length);
             Write1(s, (byte)(IsCompressed ? 1 : 0));
             WriteString(s, Name);

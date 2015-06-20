@@ -10,19 +10,13 @@ namespace PkgEdit.ViewModel
 {
     public class PkgViewModel : ViewModelBase
     {
+        private string pkgName;
+
         private Pkg pkg;
-        public Pkg Pkg
-        {
-            get { return pkg; }
-            set { SetField(ref pkg, value); }
-        }
+        public Pkg Pkg { get { return pkg; } set { SetField(ref pkg, value); } }
 
         private int listIndex;
-        public int ListIndex
-        {
-            get { return listIndex; }
-            set { SetField(ref listIndex, value); }
-        }
+        public int ListIndex { get { return listIndex; } set { SetField(ref listIndex, value); } }
 
         public ICommand OpenFile { get { return new RelayCommand(OpenPkgExecute); } }
         public ICommand SaveFile { get { return new RelayCommand(SavePkgExecute); } }
@@ -37,6 +31,7 @@ namespace PkgEdit.ViewModel
 
         public PkgViewModel()
         {
+            pkgName = "OS_Modified.pkg";
             Pkg = new Pkg();
         }
 
@@ -49,6 +44,7 @@ namespace PkgEdit.ViewModel
 
             if (result == true)
             {
+                pkgName = openFileDialog.FileName.Substring(openFileDialog.FileName.LastIndexOf('\\') + 1);
                 Pkg = new Pkg();
                 GC.Collect();
                 Pkg.LoadPackageFromFile(openFileDialog.FileName);
@@ -59,7 +55,7 @@ namespace PkgEdit.ViewModel
         private void SavePkgExecute()
         {
             Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog();
-            saveFileDialog.FileName = "OS_Package.pkg";
+            saveFileDialog.FileName = pkgName;
             bool? result = saveFileDialog.ShowDialog();
 
             if (result == true)
